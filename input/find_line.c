@@ -35,7 +35,7 @@ void		main_solution(int ant_count, t_solution *solution)
 {
 	int			i;
 	int			d;
-	int n_turns;
+	//int n_turns;
 
 	int *len_mas = solution->len_pats;
 	i = 1;

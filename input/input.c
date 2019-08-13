@@ -27,7 +27,7 @@ int length_path(t_room *room)
 void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 {
 	t_lst *neighbors;
-	char **path;
+	//char **path;
 	t_room *room;
 	int n;
 	int i = 0;
@@ -47,7 +47,6 @@ void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 	mas[i] = NULL;
 }
 
-
 int count_paths(t_lemin *lemin) {
 	int		count;
 	t_lst	*neighbors;
@@ -65,14 +64,14 @@ int count_paths(t_lemin *lemin) {
 
 void find_best_solution(t_lemin *lemin) 
 {
-    int g;
+   int g;
 	t_solution *solution;
 	solution = (t_solution *)malloc(sizeof(t_solution));
 	solution->result_paths = NULL;
 	solution->result_paths_len = 0;
+	g = 0;
 	while (find_more_path(lemin))
 	{
-		//ft_printf("f");
 		g = count_paths(lemin);		
 		solution->paths = (char ***)malloc(sizeof(char **) * (g + 1));;
 		solution->len_pats = (int *) malloc(sizeof(int) *  (g + 1));

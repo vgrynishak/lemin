@@ -67,7 +67,7 @@ void			lst_push(t_lst **head, void *data)
 void add_to_queue(t_lst **queue, t_room *room)
 {
     t_lst *tmp_neighbors;
-    t_lst *tmp_queue;   
+    //t_lst *tmp_queue;   
     t_link *link;
 
     int new_distance;
@@ -78,11 +78,13 @@ void add_to_queue(t_lst **queue, t_room *room)
     {
         link = tmp_neighbors->content;
         //ft_printf("%s\n",link->room->name );
-        new_distance = room->distance + link->weight;  // TODO: add link weight instead of 1
-         if (!is_exist(*queue, link->room) && new_distance < link->room->distance) {
+        new_distance = room->distance + link->weight;
+         if (new_distance < link->room->distance) {
             link->room->distance = new_distance;
             link->room->prev = room;
-            lst_push(queue, link->room);
+			if (!is_exist(*queue, link->room)) {
+            	lst_push(queue, link->room);
+			}
            /*  tmp_queue = ft_lst_new(link->room, sizeof(t_room));
             tmp_queue->next = *queue;
             *queue = tmp_queue;*/
@@ -138,7 +140,7 @@ void save_path(t_lemin *lemin)
 {
     t_room *t = lemin->end;
     t_room *tmp_next;
-    t_room *tmp_prev;
+    //t_room *tmp_prev;
 
     int check = 1;
     while (t->prev) {
@@ -157,6 +159,9 @@ void save_path(t_lemin *lemin)
 
 void find_one_path(t_lemin *lemin) 
 {
+	// <
+	//static int	test = 0;
+	// >
     t_lst *queue;
     t_room *src;
 
@@ -165,12 +170,21 @@ void find_one_path(t_lemin *lemin)
     initial_rooms(lemin->rooms);
     lemin->start->distance = 0;
 
+	// <
+	//ft_printf("fop:%d\n", ++test);
+	// >
 
     while (src && src != lemin->end)
-    {   
+    {
+		// <
+		//ft_printf("  src: %s %d\n", src->name, src->distance);
+		// >
         add_to_queue(&queue, src);
         src = get_min(&queue);
     }
+	// <
+	//ft_printf("\n");
+	// >
 }
 
 void			*lst_del(t_lst **neighbors)
@@ -260,11 +274,12 @@ t_room			*link_pop(t_room *room)
 	t_room		*dst;
 
 	dst = ((t_link *)room->neighbors->content)->room;
-	free(lst_pop(&room->neighbors));
+	free(lst_del(&room->neighbors));
 	return (dst);
 }
 
-void			*lst_pop(t_lst **room)
+// This is the same function as `lst_del` above, remove it.
+/*void			*lst_pop(t_lst **room)
 {
 	t_lst		*item;
 	void		*data;
@@ -273,7 +288,8 @@ void			*lst_pop(t_lst **room)
 	*room = item->next;
 	data = item->content;
 	free(item);
-}
+	return (data);	// I added this
+}*/
 
 static void		merge(t_lemin *lemin, t_link *l)
 {
@@ -374,16 +390,63 @@ void		restart(t_lemin *lemin)
 	}
 }
 
+/*
+static void	debug_print_rooms_with_links(t_room *rooms)
+{
+	while (rooms)
+	{
+		ft_printf("%s [ ", rooms->name);
+		t_lst *neighbors = rooms->neighbors;
+		while (neighbors)
+		{
+			t_link *const l = neighbors->content;
+			ft_printf("%s:%+2d ", l->room->name, l->weight);
+			neighbors = neighbors->next;
+		}
+		rooms = rooms->next;
+		ft_printf("]\n");
+	}
+}
+*/
+
+/*
+static void	debug_print_rooms(t_room *rooms)
+{
+	static int	test = 0;
+
+	ft_printf("f:%d\n", ++test);
+	while (rooms)
+	{
+		ft_printf("%s %d\n", rooms->name, rooms->distance < 1000 ? rooms->distance : 42424242);
+		rooms = rooms->next;
+	}
+	ft_printf("\n");
+}
+*/
+
 int			find_more_path(t_lemin *lemin)
 {
+	//static int	test = 0;
 
+	// <
+	//ft_printf("f:%d\n", ++test);
+	//ft_printf("before split:\n");
+	//debug_print_rooms_with_links(lemin->rooms);
+	// >
 	prepare_to_split(lemin);
-
+	// <
+	//ft_printf("after split:\n");
+	//debug_print_rooms_with_links(lemin->rooms);
+	// >
 	find_one_path(lemin);
 
     save_inp(lemin->end);
 
 	prepare_to_merge(lemin);
+
+	// <
+	//debug_print_rooms(lemin->rooms);
+	// >
 
     if (!lemin->end->prev) {
         return 0;
