@@ -19,11 +19,11 @@ t_room	*ft_room_new(char *name, size_t content_size)
 	else
 	{
 		free(p);
-		p = NULL;
+		p = NULL;	// should return here
 	}
 	p->next = NULL;
 	p->neighbors = NULL;
-	p->distance = 10000;
+	p->distance = 1000000;
 	p->next_save = NULL;
 	p->prev_save = NULL;
 	p->prev = NULL;

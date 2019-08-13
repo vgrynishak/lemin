@@ -27,7 +27,7 @@ int length_path(t_room *room)
 void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 {
 	t_lst *neighbors;
-	char **path;
+	//char **path;
 	t_room *room;
 	int n;
 	int i = 0;
@@ -47,7 +47,7 @@ void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 	mas[i] = NULL;
 }
 
-
+/*
 int count_paths(t_lemin *lemin) {
 	int		count;
 	t_lst	*neighbors;
@@ -62,18 +62,47 @@ int count_paths(t_lemin *lemin) {
 	}
 	return count;
 }
+*/
+
+int count_max_paths(t_lemin *lemin)
+{
+	int		count_start;
+	int		count_end;
+	int		count;
+	t_lst	*neighbors;
+
+	count_start = 0;
+	neighbors = lemin->start->neighbors;
+	while (neighbors)
+	{
+		++count_start;
+		neighbors = neighbors->next;
+	}
+	count_end = 0;
+	neighbors = lemin->end->neighbors;
+	while (neighbors)
+	{
+		++count_end;
+		neighbors = neighbors->next;
+	}
+	count = count_start < count_end ? count_start : count_end;
+	return (lemin->count_ant < count ? lemin->count_ant : count);
+}
 
 void find_best_solution(t_lemin *lemin) 
 {
+	int const	max_paths = count_max_paths(lemin);
     int g;
 	t_solution *solution;
 	solution = (t_solution *)malloc(sizeof(t_solution));
 	solution->result_paths = NULL;
 	solution->result_paths_len = 0;
-	while (find_more_path(lemin))
+	g = 0;
+	while (g < max_paths && find_more_path(lemin))
 	{
+		++g;
 		//ft_printf("f");
-		g = count_paths(lemin);		
+//		g = count_paths(lemin);		
 		solution->paths = (char ***)malloc(sizeof(char **) * (g + 1));;
 		solution->len_pats = (int *) malloc(sizeof(int) *  (g + 1));
 		solution->ants_by_path =  (int *) malloc(sizeof(int) *  (g + 1));

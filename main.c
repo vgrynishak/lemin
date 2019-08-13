@@ -282,11 +282,11 @@ void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
 			delete_input(input, tmp_input);
 			//if (!prev) {
 			//ft_printf("1");
-			//*input = tmp_input->next;
+			// *input = tmp_input->next;
 			//} else {
 			//ft_printf("2");
 			//	prev->next = tmp_input->next;
-				//*input = tmp_input_save;
+				// *input = tmp_input_save;
 			
 		} else {
 			 tmp_input->room_index++;
@@ -304,7 +304,7 @@ int main(void)
 	t_lemin *lemin;
 
 	//int fd = open("gen-maps/big/1.map", O_RDONLY);
-	int fd = open("gen-maps/big-superposition/6.map", O_RDONLY);
+	//int fd = open("gen-maps/big-superposition/6.map", O_RDONLY);
 	//int fd = open("gen-maps/big/3.map", O_RDONLY);
 	//int fd = open("gen-maps/big/4.map", O_RDONLY);
 	//int fd = open("gen-maps/big/5.map", O_RDONLY);
@@ -318,7 +318,7 @@ int main(void)
 	initial_lemin(&lemin);
 
 	int i = 0;
-	while (get_next_line(fd, &line) == 1)
+	while (get_next_line(0, &line) == 1)
 	{
 		save_input(lemin, line);
 		parse_data(lemin, line);
@@ -361,7 +361,12 @@ int main(void)
 
 	find_best_solution(lemin);
 
-	show_input(lemin);exit(1);
+	show_input(lemin);
+	
+	//system("leaks -q lem-in >&2");
+
+	exit(1);
+////////////////////////////
 	t_solution *solution = lemin->solution;
 	/* int *tre = solution->result_ants_by_path;
 	while (*tre)
