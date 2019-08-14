@@ -1,6 +1,30 @@
 #include "lemin.h"
 
-void initial_lemin(t_lemin **lemin) 
+void debug(t_lemin *lemin)
+{
+    t_room *rooms = lemin->rooms;
+    t_lst *neighbors;
+    ft_printf("Debug (\n");
+    while (rooms)
+    {
+        ft_printf("  Room \"%s\" %p (\n", rooms->name, rooms);
+        ft_printf("    prev:      %s\n", rooms->prev ? rooms->prev->name : "-");
+        ft_printf("    prev_save: %s\n", rooms->prev_save ? rooms->prev_save->name : "-");		//
+        ft_printf("    next_save: %s\n", rooms->next_save ? rooms->next_save->name : "-");		//
+        ft_printf("    neighbors: [");
+        neighbors = rooms->neighbors;
+        while (neighbors)
+        {
+            ft_printf(" %s", ((t_link *)neighbors->content)->room->name);
+            neighbors = neighbors->next;
+        }
+        ft_printf(" ]\n  )\n");
+        rooms = rooms->next;
+    }
+    ft_printf(")\n");
+}
+
+void	initial_lemin(t_lemin **lemin) 
 {
 	*lemin = (t_lemin *)malloc(sizeof(t_lemin));
 	
@@ -27,346 +51,75 @@ void show(t_link *link)
 	}									//
 	ft_printf("\n");
 }
-/* 
-int count_paths(t_lemin *lemin) {
-	int		count;
-	t_lst	*neighbors;
 
-	count = 0;
-	neighbors = lemin->end->neighbors;
-	while (neighbors) {
-		if (((t_link *)neighbors->content)->room->next_save == lemin->end) {
-			++count;	
-		}
-		neighbors = neighbors->next;
-	}
-	return count;
-}
-*/
-/* int length_path(t_room *room)
+int start_to_finish(t_lemin *lemin)
 {
-	int n = 0;
-
-	while (room)
-	{
-		n++;
-		room = room->next_save;
-	}
-	
-	return n;
-}
-
-void fill_room(char **mas, t_room *room)
-{
-	while (room)
-	{
-		*mas = room->name;
-		mas++;
-		room = room->next_save;
-	}
-	*mas = NULL;	
-}
-
-void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
-{
+	t_room *rooms;
 	t_lst *neighbors;
-	char **path;
-	t_room *room;
-	int n;
-	int i = 0;
-	//ft_printf("( ");
-	neighbors = lemin->start->neighbors;
-	while (neighbors) {
-		room = ((t_link *)neighbors->content)->room;
-		if (room->prev_save == lemin->start) {
-			n = length_path(room);
-			mas[i] = (char **)malloc(sizeof(char *) * (n + 1));
-			len_mas[i] = n;
-			fill_room(mas[i], room);
-			i++;
-			//ft_printf("%d ", n);
-		}
-		neighbors = neighbors->next;
-	}
-	len_mas[i] = 0;
-	mas[i] = NULL;
-	//ft_printf(")\n");
-}
+	rooms = lemin->rooms;
 
-
-void sort(char ***mas, int *len_mas)
-{
-	int i = 0;
-	int j;
-	int tmp;
-	char **tmp_mas;
-	while (len_mas[i])
+	while (rooms)
 	{
-		j = i + 1;
-		while (len_mas[j])
-		{
-			if (len_mas[j] < len_mas[i])
+		if (rooms == lemin->start) {
+			neighbors = rooms->neighbors;
+			while (neighbors)
 			{
-				tmp = len_mas[i];
-				len_mas[i] = len_mas[j];
-				len_mas[j] = tmp;
-				tmp_mas = mas[i];
-				mas[i] = mas[j];
-				mas[j] = tmp_mas;
-			}
-			j++;
-		}
-		i++;		
-	}
-	
-}
-
-int ft_strlen_num(int *n)
-{
-	int i = 0;
-
-	while (*n) {
-		i++;
-		n++;
-	}
-
-	return i;
-}
-
-static void		compute_ants_per_path(t_solution *solution, int i)
-{
-	int			j;
-
-	j = 0;
-	 while (j < i)
-	{
-		solution->ants_by_path[j] = solution->count_line - solution->len_pats[j] + 1;
-		++j;
-	}
-	while (j < ft_strlen_num(solution->len_pats))
-	{
-		solution->ants_by_path[j] = 0;
-		++j;
-	}
-}
-
-static void		solution_add(int ant_count, t_solution *solution)
-{
-	int			i;
-
-	solution->count_line += 1;
-	i = 0;
-	while (ant_count--)
-	{
-		solution->ants_by_path[i]++;
-		++i;
-	}
-}
-
-void		main_solution(int ant_count, t_solution *solution)
-{
-	int			i;
-	int			d;
-	int n_turns;
-
-	int *len_mas = solution->len_pats;
-	i = 1;
-	while (i < ft_strlen_num(len_mas))
-	{
-		d = len_mas[i] - len_mas[i - 1];
-		if (ant_count / i <= d)
-			break ;
-		ant_count -= d * i;
-		++i;
-	}
-	d = ant_count / i;
-	ant_count -= d * i;
-	solution->count_line = len_mas[i - 1] + d - 1;
-	compute_ants_per_path(solution, i);
-	if (ant_count > 0)
-		solution_add(ant_count, solution);	
-}
-
-void find_line(t_solution *solution, int ants)
-{
-	sort(solution->paths, solution->len_pats);
-	main_solution(ants, solution);
-}
-
-void minus_by_patchs(t_solution *solution)
-{
-	int *tre = solution->result_ants_by_path;
-	while (*tre)
-	{
-		(*tre)--;
-		tre++;
-	}
-}
-
-void input_start_go(t_solution *solution, int *ant_go, t_input **input)
-{
-	char ***mas;
-	int *len_mas;
-	mas = solution->result_paths;
-	len_mas = solution->result_ants_by_path;
-
-	int y = 0;
-	while (*mas)
-	{
-		if (*len_mas > 0) {
-			char **tmp;
-			tmp = *mas;
-			
-			t_input *tmp_input;
-			tmp_input = (t_input *)malloc(sizeof(t_input));
-			tmp_input->room_name = *tmp;
-			tmp_input->room_index = 0;
-			tmp_input->patch_index  = y;
-			tmp_input->ant_number = *ant_go;
-			tmp_input->next = NULL;
-			if (!(*input)) { 
-				*input = tmp_input;
-			} else {
-				t_input *lol;
-				lol = *input;
-				while(lol->next) {
-					lol = lol->next;
+				if (((t_link *)neighbors->content)->room == lemin->end) {
+					return 1;
 				}
-				lol->next = tmp_input;
+				neighbors = neighbors->next;
 			}
-			
-			(*ant_go)++;
+			break ;
 		}
-		y++;
-		mas++;
-		len_mas++;
+		rooms = rooms->next;
 	}
-	minus_by_patchs(solution);	
+	return 0;
 }
 
-void delete_input(t_input **input, t_input *input_delete)
+void show_input_line(t_lemin *lemin)
 {
-	t_input *tmp;
-	t_input *prev;
+	int i;
 
-	tmp = *input;
-
-	if (*input == input_delete) {
-		*input = (*input)->next;
-	} else {
-		while (tmp)
-		{
-			if (tmp == input_delete) {
-				prev->next = tmp->next;
-				break;
-			}
-			prev = tmp;
-			tmp = tmp->next;
-		}
-	}
-}
-
-void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
-{
-	 t_input *tmp_input;
-	t_input *tmp_input_save;
-	t_input *prev;
-	prev = NULL;
-	tmp_input = *input;
-	tmp_input_save = tmp_input;
-	char ***mas;
-	mas = solution->result_paths;
-	while (tmp_input)
+	i = 1;
+	while (i <= lemin->count_ant)
 	{
-		if (tmp_input->room_name == lemin->end->name) {
-			delete_input(input, tmp_input);
-			//if (!prev) {
-			//ft_printf("1");
-			// *input = tmp_input->next;
-			//} else {
-			//ft_printf("2");
-			//	prev->next = tmp_input->next;
-				// *input = tmp_input_save;
-			
-		} else {
-			 tmp_input->room_index++;
-			 tmp_input->room_name = mas[tmp_input->patch_index][tmp_input->room_index];
-		}
-		
-		prev = tmp_input;
-		tmp_input = tmp_input->next;
+		if (i == lemin->count_ant)
+			ft_printf("L%d-%s\n", i, lemin->end->name);
+		else
+			ft_printf("L%d-%s ", i, lemin->end->name);
+		i++;	
 	}
-	
-}*/
+	exit (1);
+}
+
 int main(void)
 {
-
-	t_lemin *lemin;
-
-	//int fd = open("gen-maps/big/1.map", O_RDONLY);
-	//int fd = open("gen-maps/big-superposition/6.map", O_RDONLY);
-	//int fd = open("gen-maps/big/3.map", O_RDONLY);
-	//int fd = open("gen-maps/big/4.map", O_RDONLY);
-	//int fd = open("gen-maps/big/5.map", O_RDONLY);
-	//int fd = open("gen-maps/big/6.map", O_RDONLY);
-	//int fd = open("gen-maps/big/7.map", O_RDONLY);
-	//int fd = open("gen-maps/big/8.map", O_RDONLY);
-	//int fd = open("gen-maps/big/9.map", O_RDONLY);
-	//int fd = open("lem_in/_maps/theta_unequal_4.map", O_RDONLY);
-	char *line;
+	t_lemin	*lemin;
+	char	*line;
 
 	initial_lemin(&lemin);
-
-	int i = 0;
 	while (get_next_line(0, &line) == 1)
 	{
 		save_input(lemin, line);
 		parse_data(lemin, line);
-
 		if (lemin->error) {
-			write(1, "ERROR\n", 6);
 			ft_printf("%s\n", line);
+			write(1, "ERROR\n", 6);
 			return 1;
 		}
 	}
-	char ***mas;
-	int *len_mas;
-	//find_one_path(lemin);
-	//debug(lemin);exit(1);
-    //save_path(lemin);
-/* 	
-	int g;
-	char ***mas;
-	int *len_mas;
-	t_solution *solution;
-	solution = (t_solution *)malloc(sizeof(t_solution));
-	solution->result_paths = NULL;
-	solution->result_paths_len = 0;
-	while (find_more_path(lemin))
-	{
-		g = count_paths(lemin);		
-		solution->paths = (char ***)malloc(sizeof(char **) * (g + 1));;
-		solution->len_pats = (int *) malloc(sizeof(int) *  (g + 1));
-		solution->ants_by_path =  (int *) malloc(sizeof(int) *  (g + 1));
-		fill_mass(lemin, solution->paths, solution->len_pats);
-		find_line(solution, lemin->count_ant);
-		 if (!solution->result_paths || solution->result_line > solution->count_line) {
-			solution->result_ants_by_path = solution->ants_by_path;
-			solution->result_line = solution->count_line;
-			solution->result_paths = solution->paths;
-			solution->result_paths_len = solution->len_pats;
-		} 
-	}
-*/
-
+	if (start_to_finish(lemin))
+		show_input_line(lemin);
 	find_best_solution(lemin);
-
-	show_input(lemin);
+	if (!lemin->solution->result_paths)
+		write(1, "ERROR\n", 6);
+	else	
+		show_input(lemin);
 	
 	//system("leaks -q lem-in >&2");
-
-	exit(1);
-////////////////////////////
+	return (1);
+}	
+void show_patch(t_lemin *lemin) {	
 	t_solution *solution = lemin->solution;
 	/* int *tre = solution->result_ants_by_path;
 	while (*tre)
@@ -377,9 +130,11 @@ int main(void)
 	exit(1);*/
 	t_input *input;
 	t_input *input_go;
+	char ***mas;
+	int *len_mas;
 	int ant_go = 1;
 	input = NULL;
-	i = 0; 
+	int i = 0; 
 	while (i < solution->result_line)
 	{
 		if (!input) {
@@ -522,5 +277,4 @@ int main(void)
 		ft_printf("\n");
 		tmp3= tmp3->next;
 	}*/
-	return (0);
 }

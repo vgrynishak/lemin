@@ -75,14 +75,12 @@ void delete_input(t_input **input, t_input *input_delete)
 
 void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
 {
-	 t_input *tmp_input;
-	t_input *tmp_input_save;
-	t_input *prev;
-	prev = NULL;
+	t_input *tmp_input;
+
 	tmp_input = *input;
-	tmp_input_save = tmp_input;
 	char ***mas;
 	mas = solution->result_paths;
+
 	while (tmp_input)
 	{
 		if (tmp_input->room_name == lemin->end->name) {
@@ -92,7 +90,6 @@ void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
 			 tmp_input->room_name = mas[tmp_input->patch_index][tmp_input->room_index];
 		}
 		
-		prev = tmp_input;
 		tmp_input = tmp_input->next;
 	}
 	
