@@ -63,9 +63,28 @@ int count_paths(t_lemin *lemin) {
 	return count;
 }
 
+void free_solution(char ***paths, int *len_mas, int *ants_by_path)
+{
+	if (paths) {
+	char ***mas = paths;
+	while (*mas) {
+		/*char **tmp = *mas;
+		while(*tmp) {
+			free(*tmp);
+			tmp++;
+		}*/
+		free(*mas);
+		mas++;
+	}
+	free(paths);
+	free(len_mas);
+	free(ants_by_path);
+	}
+}
+
 void find_best_solution(t_lemin *lemin) 
 {
-   	int g;
+	int g;
 	t_solution *solution;
 
 	solution = (t_solution *)malloc(sizeof(t_solution));
@@ -74,18 +93,25 @@ void find_best_solution(t_lemin *lemin)
 	g = 0;
 	while (find_more_path(lemin))
 	{
+		//system("leaks -q lem-in >&2");exit(1);
 		g = count_paths(lemin);		
 		solution->paths = (char ***)malloc(sizeof(char **) * (g + 1));;
 		solution->len_pats = (int *) malloc(sizeof(int) *  (g + 1));
 		solution->ants_by_path =  (int *) malloc(sizeof(int) *  (g + 1));
 		fill_mass(lemin, solution->paths, solution->len_pats);
+		//system("leaks -q lem-in >&2");
 		find_line(solution, lemin->count_ant);
 		 if (!solution->result_paths || solution->result_line > solution->count_line) {
+			free_solution(solution->result_paths, solution->result_paths_len, solution->result_ants_by_path);
 			solution->result_ants_by_path = solution->ants_by_path;
 			solution->result_line = solution->count_line;
 			solution->result_paths = solution->paths;
 			solution->result_paths_len = solution->len_pats;
-		} 
+		} else {
+			free_solution(solution->paths, solution->len_pats, solution->ants_by_path);
+		}
+		//system("leaks -q lem-in >&2");
+		//ft_printf("finish\n");
 	}
 	lemin->solution = solution;
 }

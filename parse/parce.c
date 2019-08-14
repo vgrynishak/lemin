@@ -59,7 +59,6 @@ void parse_data(t_lemin *lemin, char *line)
 		lemin->count_ant = ft_atoi(line);	
 		allow_number = 0;
 	} else{
-		ft_printf("2");
 		lemin->error = 1;
 	}	
 }

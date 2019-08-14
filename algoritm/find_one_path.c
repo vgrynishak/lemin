@@ -101,10 +101,14 @@ t_room *get_min(t_lst **queue)
         tmp_prev = tmp_queue;
         tmp_queue = tmp_queue->next;    
     }
-    if (!prev) 
+    if (!prev){
+        free(*queue);
         *queue = next;
-    else 
+    }
+    else{
+        free(prev->next);
         prev->next = next;
+    }
     return min;
 }
 
@@ -121,5 +125,13 @@ void find_one_path(t_lemin *lemin)
     {
         add_to_queue(&queue, src);
         src = get_min(&queue);
+//        ft_printf("s\n");
     }
+
+    //t_lst = *l;
+    while (queue) {
+        free(queue);
+        queue = queue->next;
+    }
+		//system("leaks -q lem-in >&2");
 }

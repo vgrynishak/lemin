@@ -22,6 +22,18 @@ int		ft_atoi_strict(char const *str)
 	return 1;
 }
 
+void free_room(char **words)
+{
+	char **tmp;
+
+	tmp = words;
+	while (*tmp) {
+		free(*tmp);
+		tmp++;
+	}
+
+	free(words);
+}
 void save_room(t_lemin *lemin, char *line, int *command)
 {
 	char		**words;
@@ -35,15 +47,11 @@ void save_room(t_lemin *lemin, char *line, int *command)
 			&& ft_atoi_strict(words[2]))
 	{
 		room = ft_room_new(words[0], ft_strlen(words[0]));
-
-		if (*command == 1) {
+		if (*command == 1)
 			lemin->start = room;
-		} else if (*command == 2) {
+		else if (*command == 2)
 			lemin->end = room;
-		}
-
 		*command = 0;
-
 		if (lemin->rooms) {
 			room->next = lemin->rooms;
 		}
@@ -53,4 +61,5 @@ void save_room(t_lemin *lemin, char *line, int *command)
 	else {
 		lemin->error = 1;
 	}
+	free_room(words);
 }

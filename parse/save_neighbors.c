@@ -25,6 +25,7 @@ void save_conection(t_room *src, t_room *dst, int weight)
 
 	neighbor = ft_lst_new(link, sizeof(t_link));
 
+	free(link);
 	if (src->neighbors) 
 		neighbor->next = src->neighbors;
 	src->neighbors = neighbor;
@@ -46,4 +47,5 @@ void save_neighbors(t_lemin *lemin, char *line)
 	}
 	else
 		lemin->error = 1;
+	free_room(words);
 }

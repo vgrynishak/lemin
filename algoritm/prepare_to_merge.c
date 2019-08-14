@@ -23,6 +23,7 @@ static void		merge(t_lemin *lemin, t_link *l)
         input = link_pop(output);
 		prev_output = link_pop(input);
 		input->neighbors = output->neighbors;
+		free(output->name);
 		free(output);
 		save_conection(input, input->next_save, 1);
 		save_conection(input->next_save, input, 1);

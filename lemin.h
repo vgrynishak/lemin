@@ -111,7 +111,7 @@ void add_to_queue(t_lst **queue, t_room *room);
 t_room *get_min(t_lst **queue);
 void find_one_path(t_lemin *lemin);
 void initial_rooms(t_room *rooms);
-
+void free_room(char **words);
 
 
 #endif

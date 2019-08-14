@@ -48,7 +48,7 @@ void input_start_go(t_solution *solution, int *ant_go, t_input **input)
 		mas++;
 		len_mas++;
 	}
-	minus_by_patchs(solution);	
+	minus_by_patchs(solution);
 }
 
 void delete_input(t_input **input, t_input *input_delete)
@@ -60,10 +60,12 @@ void delete_input(t_input **input, t_input *input_delete)
 
 	if (*input == input_delete) {
 		*input = (*input)->next;
+		free(tmp);
 	} else {
 		while (tmp)
 		{
 			if (tmp == input_delete) {
+				free(prev->next);
 				prev->next = tmp->next;
 				break;
 			}
@@ -110,7 +112,6 @@ void show_start(t_lemin *lemin)
 void show_input(t_lemin *lemin)
 {
     t_solution *solution = lemin->solution;
-
     t_input *input;
 	t_input *input_go;
 	int ant_go = 1;
@@ -119,14 +120,9 @@ void show_input(t_lemin *lemin)
     show_start(lemin);
 	while (i < solution->result_line)
 	{
-		if (!input) {
-			input = (t_input *)malloc(sizeof(t_input));
-			input = NULL;
-			input_start_go(solution, &ant_go, &input);
-		} else {
+		if (input)
 			go_one_step(&input, lemin, solution);
-			input_start_go(solution, &ant_go, &input);
-		}
+		input_start_go(solution, &ant_go, &input);
 		input_go = input;
 
 		while (input_go)
@@ -136,5 +132,8 @@ void show_input(t_lemin *lemin)
 		}
 		ft_printf("\n");
 		i++;
-	}	    
+		//system("leaks -q lem-in >&2");
+	}
+	free(input);
+	system("leaks -q lem-in >&2");
 }
