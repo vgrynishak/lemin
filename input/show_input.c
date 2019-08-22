@@ -3,20 +3,27 @@
 void minus_by_patchs(t_solution *solution)
 {
 	int *tre = solution->result_ants_by_path;
+	
 	while (*tre)
 	{
-		(*tre)--;
+		//ft_printf("was: %d\n", *tre);
+		*tre -= 1;
+		//ft_printf("stay: %d\n", *tre);
+	//system("leaks -q lem-in >&2");
 		tre++;
 	}
+
 }
 
 void input_start_go(t_solution *solution, int *ant_go, t_input **input)
 {
+	//ft_printf("gere\n");
 	char ***mas;
 	int *len_mas;
 	mas = solution->result_paths;
 	len_mas = solution->result_ants_by_path;
 
+//ft_printf
 	int y = 0;
 	while (*mas)
 	{
@@ -48,7 +55,11 @@ void input_start_go(t_solution *solution, int *ant_go, t_input **input)
 		mas++;
 		len_mas++;
 	}
+	//system("leaks -q lem-in >&2");
+	//	ft_printf("__________________________________-\n");
 	minus_by_patchs(solution);
+	//system("leaks -q lem-in >&2");
+	//	ft_printf("__________________________________-\n");exit(1);
 }
 
 void delete_input(t_input **input, t_input *input_delete)
@@ -117,12 +128,17 @@ void show_input(t_lemin *lemin)
 	int ant_go = 1;
 	input = NULL;
 	int i = 0; 
-    show_start(lemin);
+    //show_start(lemin);
+//	system("leaks -q lem-in >&2");exit(1);
+
 	while (i < solution->result_line)
 	{
+		//ft_printf("%d\n", i);
 		if (input)
 			go_one_step(&input, lemin, solution);
 		input_start_go(solution, &ant_go, &input);
+		//system("leaks -q lem-in >&2");
+		//ft_printf("__________________________________-\n");
 		input_go = input;
 
 		while (input_go)
@@ -133,7 +149,12 @@ void show_input(t_lemin *lemin)
 		ft_printf("\n");
 		i++;
 		//system("leaks -q lem-in >&2");
+		//ft_printf("__________________________________-\n");
 	}
+//	system("leaks -q lem-in >&2");
+	//free(input->room_name);
 	free(input);
-	system("leaks -q lem-in >&2");
+	free(input_go);
+	//system("leaks -q lem-in >&2");exit(1);
+
 }

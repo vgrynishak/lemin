@@ -4,18 +4,33 @@
 static void		compute_ants_per_path(t_solution *solution, int i)
 {
 	int			j;
-
+/*
+int *t;
+		t = solution->len_pats;
+		while(*t){
+			ft_printf("was %d\n", *t);
+			t++;
+		}ft_printf("finish\n");*/
 	j = 0;
-	 while (j < i)
-	{
+	 while (j < i){
+		// ft_printf("was %d\n", solution->len_pats[j]);
 		solution->ants_by_path[j] = solution->count_line - solution->len_pats[j] + 1;
 		++j;
 	}
-	while (j < ft_strlen_num(solution->len_pats))
-	{
+
+	//solution->
+	while (j < ft_strlen_num(solution->len_pats)){
 		solution->ants_by_path[j] = 0;
 		++j;
 	}
+
+	solution->ants_by_path[j] = 0;
+	/*int *t;
+		t = solution->ants_by_path;
+		while(*t){
+			ft_printf("was %d\n", *t);
+			t++;
+		}ft_printf("finish\n");*/
 }
 
 static void		solution_add(int ant_count, t_solution *solution)
@@ -36,9 +51,12 @@ void		main_solution(int ant_count, t_solution *solution)
 	int			i;
 	int			d;
 	//int n_turns;
+	//ft_printf("ant %d\n", ft_strlen_num(len_mas));
 
 	int *len_mas = solution->len_pats;
+	//ft_printf("ant %d\n", ft_strlen_num(len_mas));
 	i = 1;
+
 	while (i < ft_strlen_num(len_mas))
 	{
 		d = len_mas[i] - len_mas[i - 1];
@@ -97,5 +115,6 @@ int ft_strlen_num(int *n)
 void find_line(t_solution *solution, int ants)
 {
 	sort(solution->paths, solution->len_pats);
+
 	main_solution(ants, solution);
 }

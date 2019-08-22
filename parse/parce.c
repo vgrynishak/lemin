@@ -6,7 +6,7 @@ void save_input(t_lemin *lemin, char *line)
 	t_lst 	*tmp;
 
 	if (*line != '\0') {
-		input = ft_lst_new(line, ft_strlen(line));
+		input = ft_lst_new(line, ft_strlen(line) + 1);
 
 		if (lemin->input == NULL)
 			lemin->input = input;

@@ -116,15 +116,15 @@ int main(void)
 	if (start_to_finish(lemin))
 		show_input_line(lemin);
 	find_best_solution(lemin);
-//	system("leaks -q lem-in >&2");exit(1);
+	//minus_by_patchs(lemin->solution);
+
+	//system("leaks -q lem-in >&2");exit(1);
 
 	if (!lemin->solution->result_paths)
 		write(1, "ERROR\n", 6);
 	else {
-
 		show_input(lemin);
 	system("leaks -q lem-in >&2");exit(1);
-
 	}
 
 	return (1);
