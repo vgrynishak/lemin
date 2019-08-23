@@ -6,7 +6,7 @@
 /*   By: vgrynish <vgrynish@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/14 19:43:31 by vgrynish          #+#    #+#             */
-/*   Updated: 2019/08/14 21:50:38 by vgrynish         ###   ########.fr       */
+/*   Updated: 2019/08/23 20:27:34 by vgrynish         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,12 @@ void			restart(t_lemin *lemin)
 int				find_more_path(t_lemin *lemin)
 {
 	prepare_to_split(lemin);
-
 	find_one_path(lemin);
-
 	save_inp(lemin->end);
 	prepare_to_merge(lemin);
 	if (!lemin->end->prev)
 		return (0);
 	combine_paths(lemin);
 	restart(lemin);
-	//system("leaks -q lem-in >&2");exit(1);
-
 	return (1);
 }

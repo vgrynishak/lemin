@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prepare_to_merge.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vgrynish <vgrynish@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/08/23 20:53:36 by vgrynish          #+#    #+#             */
+/*   Updated: 2019/08/23 20:54:24 by vgrynish         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemin.h"
 
 t_room			*link_pop(t_room *room)
@@ -9,18 +21,17 @@ t_room			*link_pop(t_room *room)
 	return (dst);
 }
 
-
 static void		merge(t_lemin *lemin, t_link *l)
 {
 	t_room		*input;
 	t_room		*prev_output;
-    t_room *output;
+	t_room		*output;
 
-    output = l->room;
+	output = l->room;
 	link_delete(lemin->end, output);
 	while (output != lemin->start)
 	{
-        input = link_pop(output);
+		input = link_pop(output);
 		prev_output = link_pop(input);
 		input->neighbors = output->neighbors;
 		free(output->name);

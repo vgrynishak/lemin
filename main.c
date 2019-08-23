@@ -123,7 +123,7 @@ int main(void)
 	if (!lemin->solution->result_paths)
 		write(1, "ERROR\n", 6);
 	else {
-		show_input(lemin);
+		show_input(lemin, lemin->solution);
 	system("leaks -q lem-in >&2");exit(1);
 	}
 

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prepare_to_split.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vgrynish <vgrynish@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/08/23 20:54:36 by vgrynish          #+#    #+#             */
+/*   Updated: 2019/08/23 20:55:33 by vgrynish         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemin.h"
 
-void			*lst_del(t_lst **neighbors)
+void		*lst_del(t_lst **neighbors)
 {
 	t_lst		*item;
 	void		*data;
@@ -11,7 +23,6 @@ void			*lst_del(t_lst **neighbors)
 	free(item);
 	return (data);
 }
-
 
 void		link_delete(t_room *src, t_room *dst)
 {
@@ -26,9 +37,9 @@ void		link_delete(t_room *src, t_room *dst)
 void		split(t_lemin *lemin, t_link *link)
 {
 	t_room	*out;
-    t_room  *input;
-    
-    input = link->room;
+	t_room	*input;
+
+	input = link->room;
 	link_delete(lemin->end, input);
 	while (input != lemin->start)
 	{
@@ -37,12 +48,12 @@ void		split(t_lemin *lemin, t_link *link)
 		out = ft_room_new("tmp", 4);
 		out->neighbors = input->neighbors;
 		input->neighbors = NULL;
-        save_conection(input->next_save, out, -1);
-        save_conection(out, input, 0);
+		save_conection(input->next_save, out, -1);
+		save_conection(out, input, 0);
 		if (input->prev_save == lemin->start)
 		{
 			link_delete(lemin->start, input);
-            save_conection(input, lemin->start, -1);
+			save_conection(input, lemin->start, -1);
 		}
 		input = input->prev_save;
 	}

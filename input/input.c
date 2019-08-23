@@ -1,31 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vgrynish <vgrynish@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/08/23 20:32:19 by vgrynish          #+#    #+#             */
+/*   Updated: 2019/08/23 20:38:08 by vgrynish         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemin.h"
 
-void fill_room(char **mas, t_room *room)
+void	find_line(t_solution *solution, int ants)
 {
-	while (room)
-	{
-		*mas = room->name;
-		mas++;
-		room = room->next_save;
-	}
-	*mas = NULL;	
+	sort(solution->paths, solution->len_pats);
+	main_solution(ants, solution);
 }
 
-int length_path(t_room *room)
-{
-	int n;
-
-	n = 0;
-	while (room)
-	{
-		n++;
-		room = room->next_save;
-	}
-	
-	return n;
-}
-
-void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
+void	fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 {
 	t_lst	*neighbors;
 	t_room	*room;
@@ -34,9 +27,11 @@ void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 
 	i = 0;
 	neighbors = lemin->start->neighbors;
-	while (neighbors) {
+	while (neighbors)
+	{
 		room = ((t_link *)neighbors->content)->room;
-		if (room->prev_save == lemin->start) {
+		if (room->prev_save == lemin->start)
+		{
 			n = length_path(room);
 			mas[i] = (char **)malloc(sizeof(char *) * (n + 1));
 			len_mas[i] = n;
@@ -49,43 +44,17 @@ void fill_mass(t_lemin *lemin, char ***mas, int *len_mas)
 	mas[i] = NULL;
 }
 
-int count_paths(t_lemin *lemin) {
-	int		count;
-	t_lst	*neighbors;
-
-	count = 0;
-	neighbors = lemin->end->neighbors;
-	while (neighbors) {
-		if (((t_link *)neighbors->content)->room->next_save == lemin->end)
-			++count;	
-		neighbors = neighbors->next;
-	}
-	return count;
+void	fill_default_solution(t_solution **solution, int g)
+{
+	(*solution)->paths = (char ***)malloc(sizeof(char **) * (g + 1));
+	(*solution)->len_pats = (int *)malloc(sizeof(int) * (g + 1));
+	(*solution)->ants_by_path = (int *)malloc(sizeof(int) * (g + 1));
 }
 
-void free_solution(char ***paths, int *len_mas, int *ants_by_path)
+void	find_best_solution(t_lemin *lemin)
 {
-	if (paths) {
-	char ***mas = paths;
-	while (*mas) {
-		/*char **tmp = *mas;
-		while(*tmp) {
-			free(*tmp);
-			tmp++;
-		}*/
-		free(*mas);
-		mas++;
-	}
-	free(paths);
-	free(len_mas);
-	free(ants_by_path);
-	}
-}
-
-void find_best_solution(t_lemin *lemin) 
-{
-	int g;
-	t_solution *solution;
+	int			g;
+	t_solution	*solution;
 
 	solution = (t_solution *)malloc(sizeof(t_solution));
 	solution->result_paths = NULL;
@@ -93,36 +62,20 @@ void find_best_solution(t_lemin *lemin)
 	g = 0;
 	while (find_more_path(lemin))
 	{
-		//system("leaks -q lem-in >&2");exit(1);
-		g = count_paths(lemin);		
-		solution->paths = (char ***)malloc(sizeof(char **) * (g + 1));;
-		solution->len_pats = (int *) malloc(sizeof(int) *  (g + 1));
-		solution->ants_by_path =  (int *) malloc(sizeof(int) *  (g + 1));
+		g = count_paths(lemin);
+		fill_default_solution(&solution, g);
 		fill_mass(lemin, solution->paths, solution->len_pats);
-		/*int *t;
-		t = solution->len_pats;
-		while(*t){
-			ft_printf("was %d\n", *t);
-			t++;
-		}ft_printf("finish\n");*/
-		//system("leaks -q lem-in >&2");
 		find_line(solution, lemin->count_ant);
-		 if (!solution->result_paths || solution->result_line > solution->count_line) {
-			free_solution(solution->result_paths, solution->result_paths_len, solution->result_ants_by_path);
-			solution->result_ants_by_path = solution->ants_by_path;
-			solution->result_line = solution->count_line;
-			solution->result_paths = solution->paths;
-			/*t = solution->ants_by_path;
-			while(*t){
-				ft_printf("wasafter %d\n", *t);
-				t++;
-			}	ft_printf("finish\n");*/
-			solution->result_paths_len = solution->len_pats;
-		} else {
-			free_solution(solution->paths, solution->len_pats, solution->ants_by_path);
+		if (!solution->result_paths || solution->result_line
+		> solution->count_line)
+		{
+			free_solution(solution->result_paths, solution->result_paths_len,
+			solution->result_ants_by_path);
+			fill_solution(solution);
 		}
-		//system("leaks -q lem-in >&2");
-		//ft_printf("finish\n");
+		else
+			free_solution(solution->paths, solution->len_pats,
+			solution->ants_by_path);
 	}
 	lemin->solution = solution;
 }

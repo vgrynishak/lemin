@@ -88,7 +88,7 @@ int ft_strlen_num(int *n);
 void find_line(t_solution *solution, int ants);
 void fill_room(char **mas, t_room *room);
 void fill_mass(t_lemin *lemin, char ***mas, int *len_mas);
-void show_input(t_lemin *lemin);
+void show_input(t_lemin *lemin, t_solution *solution);
 void minus_by_patchs(t_solution *solution);
 void input_start_go(t_solution *solution, int *ant_go, t_input **input);
 void delete_input(t_input **input, t_input *input_delete);
@@ -112,6 +112,12 @@ t_room *get_min(t_lst **queue);
 void find_one_path(t_lemin *lemin);
 void initial_rooms(t_room *rooms);
 void free_room(char **words);
-
+void fill_tmp_input_default(t_input *input, int y);
+void	add_to_input(t_input **input, t_input *add, int *ant_go);
+void	clear_input(t_input *input);
+int length_path(t_room *room);
+void fill_solution(t_solution *solution);
+void free_solution(char ***paths, int *len_mas, int *ants_by_path);
+int count_paths(t_lemin *lemin);
 
 #endif
