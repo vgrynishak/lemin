@@ -9,13 +9,9 @@ t_room	*ft_room_new(char *name, size_t content_size)
 	if (p == NULL)
 		return (NULL);
 	if (name == NULL || content_size == 0)
-	{
 		p->name = NULL;
-	}
 	else if ((p->name = (char *)malloc(content_size + 1)))
-	{
 		ft_memcpy(p->name, name, content_size);
-	}
 	else
 	{
 		free(p);
@@ -50,28 +46,4 @@ t_lst	*ft_lst_new(void const *content, size_t content_size)
 	p->next = NULL;
 	return (p);
 }
-/*
-t_link	*ft_link_new(t_room *room)
-{
-	t_link *p;
 
-	p = NULL;
-	p = (t_link *)malloc(sizeof(t_link));
-	if (p == NULL)
-		return (NULL);
-	if (room == NULL){
-		p->room = NULL;
-	}
-	else if ((p->room = (void *)malloc(sizeof(t_room))))
-	{
-		ft_memcpy(p->room, room, content_size);
-	}
-	else{
-		free(p);
-		p = NULL;
-	}
-
-	p->next = NULL;
-	return (p);
-}
-*/

@@ -94,7 +94,24 @@ void input_start_go(t_solution *solution, int *ant_go, t_input **input);
 void delete_input(t_input **input, t_input *input_delete);
 void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution);
 void show_start(t_lemin *lemin);
-
+int		ft_atoi_strict(char const *str);
+void save_room(t_lemin *lemin, char *line, int *command);
+t_room *ft_find_room(t_room *rooms, char *name);
+void save_conection(t_room *src, t_room *dst, int weight);
+void save_neighbors(t_lemin *lemin, char *line);
+void			*lst_del(t_lst **neighbors);
+void		link_delete(t_room *src, t_room *dst);
+void		split(t_lemin *lemin, t_link *link);
+void		prepare_to_split(t_lemin *lemin);
+t_room			*link_pop(t_room *room);
+void			prepare_to_merge(t_lemin *lemin);
+int is_exist(t_lst *queue, t_room *room);
+void			lst_push(t_lst **head, void *data);
+void add_to_queue(t_lst **queue, t_room *room);
+t_room *get_min(t_lst **queue);
+void find_one_path(t_lemin *lemin);
+void initial_rooms(t_room *rooms);
+void free_room(char **words);
 
 
 #endif

@@ -3,20 +3,27 @@
 void minus_by_patchs(t_solution *solution)
 {
 	int *tre = solution->result_ants_by_path;
+	
 	while (*tre)
 	{
-		(*tre)--;
+		//ft_printf("was: %d\n", *tre);
+		*tre -= 1;
+		//ft_printf("stay: %d\n", *tre);
+	//system("leaks -q lem-in >&2");
 		tre++;
 	}
+
 }
 
 void input_start_go(t_solution *solution, int *ant_go, t_input **input)
 {
+	//ft_printf("gere\n");
 	char ***mas;
 	int *len_mas;
 	mas = solution->result_paths;
 	len_mas = solution->result_ants_by_path;
 
+//ft_printf
 	int y = 0;
 	while (*mas)
 	{
@@ -48,7 +55,11 @@ void input_start_go(t_solution *solution, int *ant_go, t_input **input)
 		mas++;
 		len_mas++;
 	}
-	minus_by_patchs(solution);	
+	//system("leaks -q lem-in >&2");
+	//	ft_printf("__________________________________-\n");
+	minus_by_patchs(solution);
+	//system("leaks -q lem-in >&2");
+	//	ft_printf("__________________________________-\n");exit(1);
 }
 
 void delete_input(t_input **input, t_input *input_delete)
@@ -60,10 +71,12 @@ void delete_input(t_input **input, t_input *input_delete)
 
 	if (*input == input_delete) {
 		*input = (*input)->next;
+		free(tmp);
 	} else {
 		while (tmp)
 		{
 			if (tmp == input_delete) {
+				free(prev->next);
 				prev->next = tmp->next;
 				break;
 			}
@@ -75,14 +88,12 @@ void delete_input(t_input **input, t_input *input_delete)
 
 void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
 {
-	 t_input *tmp_input;
-	t_input *tmp_input_save;
-	t_input *prev;
-	prev = NULL;
+	t_input *tmp_input;
+
 	tmp_input = *input;
-	tmp_input_save = tmp_input;
 	char ***mas;
 	mas = solution->result_paths;
+
 	while (tmp_input)
 	{
 		if (tmp_input->room_name == lemin->end->name) {
@@ -92,7 +103,6 @@ void go_one_step(t_input **input, t_lemin *lemin, t_solution *solution)
 			 tmp_input->room_name = mas[tmp_input->patch_index][tmp_input->room_index];
 		}
 		
-		prev = tmp_input;
 		tmp_input = tmp_input->next;
 	}
 	
@@ -113,23 +123,22 @@ void show_start(t_lemin *lemin)
 void show_input(t_lemin *lemin)
 {
     t_solution *solution = lemin->solution;
-
     t_input *input;
 	t_input *input_go;
 	int ant_go = 1;
 	input = NULL;
 	int i = 0; 
-    show_start(lemin);
+    //show_start(lemin);
+//	system("leaks -q lem-in >&2");exit(1);
+
 	while (i < solution->result_line)
 	{
-		if (!input) {
-			input = (t_input *)malloc(sizeof(t_input));
-			input = NULL;
-			input_start_go(solution, &ant_go, &input);
-		} else {
+		//ft_printf("%d\n", i);
+		if (input)
 			go_one_step(&input, lemin, solution);
-			input_start_go(solution, &ant_go, &input);
-		}
+		input_start_go(solution, &ant_go, &input);
+		//system("leaks -q lem-in >&2");
+		//ft_printf("__________________________________-\n");
 		input_go = input;
 
 		while (input_go)
@@ -139,5 +148,13 @@ void show_input(t_lemin *lemin)
 		}
 		ft_printf("\n");
 		i++;
-	}	    
+		//system("leaks -q lem-in >&2");
+		//ft_printf("__________________________________-\n");
+	}
+//	system("leaks -q lem-in >&2");
+	//free(input->room_name);
+	free(input);
+	free(input_go);
+	//system("leaks -q lem-in >&2");exit(1);
+
 }

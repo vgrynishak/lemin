@@ -1,4 +1,4 @@
-320
+0
 #Here is the number of lines required: 73
 ##start
 N_q0 2 2

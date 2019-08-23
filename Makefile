@@ -1,11 +1,11 @@
 CC	=	gcc
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	##-Wall -Wextra -Werror
 
 NAME	=	lem-in
 LIBFT	=	libft/libft.a
 
 INC	=
-SRC	=	main.c lists/action.c parse/parce.c algoritm/algoritm.c input/input.c input/find_line.c input/show_input.c
+SRC	=	main.c lists/action.c parse/parce.c parse/save_room.c parse/save_neighbors.c algoritm/algoritm.c algoritm/prepare_to_split.c algoritm/prepare_to_merge.c algoritm/find_one_path.c input/input.c input/find_line.c input/show_input.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all: $(NAME)
