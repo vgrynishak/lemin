@@ -46,6 +46,20 @@ void add_to_queue(t_lst **queue, t_room *room)
     }
 }
 
+void 	change_queue(t_lst **queue, t_lst *prev, t_lst *next)
+{
+	if (!prev)
+	{
+		free(*queue);
+		*queue = next;
+	}
+	else
+	{
+		free(prev->next);
+		prev->next = next;
+	}
+}
+
 t_room *get_min(t_lst **queue)
 {
     t_lst       *tmp_queue;
@@ -60,36 +74,16 @@ t_room *get_min(t_lst **queue)
     tmp_queue = *queue;
     while (tmp_queue)
     {
-		//ft_printf("1");
 		if (!min || min->distance > ((t_room * )tmp_queue->content)->distance)
 		{
 			min = tmp_queue->content;
 			next = tmp_queue->next;
-			prev = min ? NULL : tmp_prev;
+			prev = !min ? NULL : tmp_prev;
 		}
-        /*if (!min) {
-            prev = NULL;
-            min = tmp_queue->content;
-            next = tmp_queue->next;
-        }
-        else if (min->distance > ((t_room * )tmp_queue->content)->distance) {
-            prev = tmp_prev;
-            next = tmp_queue->next;
-            min = tmp_queue->content;
-        }*/
 		tmp_prev = tmp_queue;
 		tmp_queue = tmp_queue->next;
 	}
-	if (!prev)
-	{
-		free(*queue);
-		*queue = next;
-	}
-	else
-	{
-		free(prev->next);
-		prev->next = next;
-		}
+	change_queue(queue, prev, next);
 	return min;
 }
 
@@ -107,8 +101,9 @@ void	find_one_path(t_lemin *lemin)
 		add_to_queue(&queue, src);
 		src = get_min(&queue);
 	}
-	while (queue) {
+	while (queue)
+	{
 		free(queue);
 		queue = queue->next;
-		}
+	}
 }

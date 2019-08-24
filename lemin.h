@@ -20,7 +20,6 @@ struct			s_solution
 	int 				*result_paths_len;
 	int 				result_line;
 	int 				*result_ants_by_path;
-
 };
 
 
@@ -41,6 +40,7 @@ struct			s_lemin
 	t_lst 				*input;
 	t_room				*rooms;
 	int					error;
+	int					show_option;
 	t_solution 			*solution;
 };
 
@@ -119,5 +119,9 @@ int length_path(t_room *room);
 void fill_solution(t_solution *solution);
 void free_solution(char ***paths, int *len_mas, int *ants_by_path);
 int count_paths(t_lemin *lemin);
+void show_patch(t_solution *solution);
+void show_ants_by_patch(t_solution *solution);
+void	initial_lemin(t_lemin **lemin) ;
+void check_argv(int argc, char **argv, t_lemin *lemin);
 
 #endif

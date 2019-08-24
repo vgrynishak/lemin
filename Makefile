@@ -5,7 +5,7 @@ NAME	=	lem-in
 LIBFT	=	libft/libft.a
 
 INC	=
-SRC	=	main.c action/action.c parse/parce.c parse/save_room.c parse/save_neighbors.c algoritm/algoritm.c algoritm/prepare_to_split.c algoritm/prepare_to_merge.c algoritm/find_one_path.c input/input.c input/find_line.c input/show_input.c input/helper_input.c input/helper_solution.c
+SRC	=	main.c option.c action/action.c parse/parce.c parse/save_room.c parse/save_neighbors.c algoritm/algoritm.c algoritm/prepare_to_split.c algoritm/prepare_to_merge.c algoritm/find_one_path.c input/input.c input/find_line.c input/show_input.c input/helper_input.c input/helper_solution.c
 OBJ	=	$(SRC:%.c=%.o)
 
 all: $(NAME)
